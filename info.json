@@ -1,0 +1,20 @@
+{
+    "json_version" : 2,
+    "identity": {
+        "author": "Fritz",
+        "author_email": "fritz.smh at gmail.com",
+        "tags": ["interface", "chat"],
+        "dependencies": [],
+        "description": "Chat with the butler in a terminal",
+        "domogik_min_version": "0.4.0",
+        "name": "chat",
+        "type": "interface",
+        "version": "1.0"
+    },
+    "configuration": [],
+    "device_types": {},
+    "sensors": {},
+    "xpl_stats": {},
+    "commands": {},
+    "xpl_commands": {}
+}
