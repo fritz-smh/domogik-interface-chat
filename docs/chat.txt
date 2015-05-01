@@ -1,0 +1,31 @@
+.. _index:
+
+==============
+Interface chat
+==============
+
+Purpose
+=======
+
+This interface is usefull to interact with the butler from a console, for example over ssh.
+
+Dependencies
+============
+
+There is no dependency.
+
+Interface configuration
+=======================
+
+There is nothing to configure.
+
+Start the plugin
+================
+
+You should NOT start this interface from the Domogik admin.
+You should start it like this: ::
+
+    $ cd /var/lib/domogik/domogik_packages/interface_chat/
+    $ ./start.sh
+
+

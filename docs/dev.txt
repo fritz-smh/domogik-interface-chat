@@ -1,0 +1,19 @@
+========================
+Development informations
+========================
+
+Tests
+=====
+
+There is no automated tests for this plugin.
+
+Light mode
+==========
+
+It is possible to start this interface in a light mode: ::
+
+    $ ./start.sh -l
+
+In this mode there is no curse interface.
+
+
