@@ -36,7 +36,6 @@ Implements
 """
 
 from domogik.interface.common.interface import Interface
-from domogik.xpl.common.plugin import XplPlugin
 from domogik_packages.interface_chat.lib import npyscreen
 from domogikmq.reqrep.client import MQSyncReq
 from domogikmq.message import MQMessage
@@ -45,6 +44,7 @@ from domogikmq.message import MQMessage
 from zmq.eventloop.ioloop import IOLoop
 import zmq
 
+from argparse import ArgumentParser
 import threading
 import traceback
 import time
@@ -68,7 +68,15 @@ class ChatManager(Interface):
     def __init__(self):
         """ Init plugin
         """
-        Interface.__init__(self, name='chat', daemonize = False, log_on_stdout = False)
+        ### Option parser
+        parser = ArgumentParser()
+        parser.add_argument("-l", 
+                          action="store_true", 
+                          dest="light_mode", 
+                          default=False, \
+                          help="Start the chat interface in a very basic and light mode.")
+
+        Interface.__init__(self, name='chat', daemonize = False, log_on_stdout = False, parser = parser)
 
         # check if the client is configured. If not, this will stop the client and log an error
         #if not self.check_configured():
@@ -83,34 +91,44 @@ class ChatManager(Interface):
                                    {})
         thr_chat.start()
 
-        self.ready()
         self.log.info(u"Interface ready :)")
+        self.ready()
         print(u"Bye :)")
         self.force_leave()
 
     def process_response(self, response):
         """ Process the butler response
         """
-        #pass
+        # filter for this client only
+        if response['reply_to'] != self.source:
+            return
+
+        # process
         try:
-            self.chat_app.add_response(u"{0}".format(response['text']))
-            #print(u"Butler > {0}".format(response['text']))
+            if self.options.light_mode:
+                print(u"Butler > {0}".format(response['text']))
+            else:
+                self.chat_app.add_response(u"{0}".format(response['text']))
         except:
             self.log.error(u"Error when processing response : {0}".format(traceback.format_exc()))
-            self.chat_app.add_response(u"Error : {0}".format(traceback.format_exc()))
+            if self.options.light_mode:
+                print(u"Error when processing response : {0}".format(traceback.format_exc()))
+            else:
+                self.chat_app.add_response(u"Error : {0}".format(traceback.format_exc()))
 
     def run_chat(self):
         """ chat interface
         """
-        # old way
-        #time.sleep(1)
-        #while True:
-        #    msg = raw_input("")
-        #    self.send_to_butler(msg)
+        if self.options.light_mode:
+            time.sleep(1)
+            while True:
+                msg = raw_input("")
+                self.send_to_butler(u"{0}".format(msg), identity = "cli user", media = "chat", location = None, mood = None)
 
-        self.chat_app = Chat()
-        self.chat_app.set_butler_callback(self.send_to_butler)
-        self.chat_app.run()
+        else:
+            self.chat_app = Chat()
+            self.chat_app.set_butler_callback(self.send_to_butler)
+            self.chat_app.run()
 
 
 
@@ -145,7 +163,7 @@ class ActionControllerChat(npyscreen.ActionControllerSimple):
 
         # handle butler
         else:
-            self.parent.butler_cb(command_line)
+            self.parent.butler_cb(command_line, identity = "cli user", media = "chat", location = None, mood = None)
 
         self.parent.wMain.values = self.parent.value.get()
         self.parent.wMain.display()

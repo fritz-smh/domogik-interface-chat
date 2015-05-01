@@ -2,6 +2,11 @@
 Changelog
 =========
 
+1.1
+===
+
+* Handle the light mode (./start.sh -l)
+
 1.0
 ===
 

@@ -6,10 +6,10 @@
         "tags": ["interface", "chat"],
         "dependencies": [],
         "description": "Chat with the butler in a terminal",
-        "domogik_min_version": "0.4.0",
+        "domogik_min_version": "0.4.1",
         "name": "chat",
         "type": "interface",
-        "version": "1.0"
+        "version": "1.1"
     },
     "configuration": [],
     "device_types": {},
